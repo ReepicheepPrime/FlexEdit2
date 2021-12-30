@@ -114,8 +114,9 @@ func main() {
 	// parse the individual game vars
 	gameVars := parseGameVariableIDs(rawGameVars)
 
-	// find longest name
+	// find lengths for indentation, entirely unnecessary but it looks pretty ;)
 	longestName := 0
+	longestType := 0
 	longestRawName := 0
 	for _, gameVar := range gameVars {
 		if len(gameVar.Name) > longestName {
@@ -124,10 +125,10 @@ func main() {
 		if len(gameVar.RawName) > longestRawName {
 			longestRawName = len(gameVar.RawName)
 		}
+		if len(gameVar.Type) > longestType {
+			longestType = len(gameVar.Type)
+		}
 	}
-
-	// longest type is []number and there for hardcoded for now
-	longestType := 8
 
 	// generate go file
 	output := "// File generated automatically. DO NOT EDIT.\npackage main"
