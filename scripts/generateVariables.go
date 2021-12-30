@@ -116,10 +116,13 @@ func main() {
 
 	// find longest name
 	longestName := 0
+	longestRawName := 0
 	for _, gameVar := range gameVars {
-		length := len(gameVar.Name)
-		if length > longestName {
-			longestName = length
+		if len(gameVar.Name) > longestName {
+			longestName = len(gameVar.Name)
+		}
+		if len(gameVar.RawName) > longestRawName {
+			longestRawName = len(gameVar.RawName)
 		}
 	}
 
@@ -132,8 +135,8 @@ func main() {
 	for _, gameVar := range gameVars {
 		// add custom tags to help maintain consitency with FS. This mostly only exists because some dick
 		// used a hyphen in a variable name, which Go doesn't support for struct value names.
-		jsonTag := fmt.Sprintf("json:\"%s\"", gameVar.RawName)
-		i7NameTag := fmt.Sprintf("i7Name:\"%s\"", gameVar.RawName)
+		jsonTag := RightPad2Len(fmt.Sprintf("json:\"%s\"", gameVar.RawName), " ", longestRawName)
+		i7NameTag := RightPad2Len(fmt.Sprintf("i7Name:\"%s\"", gameVar.RawName), " ", longestRawName)
 		i7TypeTag := fmt.Sprintf("i7Type:\"%s\"", gameVar.RawType)
 		fullTags := strings.Join([]string{jsonTag, i7NameTag, i7TypeTag}, " ")
 
