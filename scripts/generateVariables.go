@@ -136,10 +136,9 @@ func main() {
 	for _, gameVar := range gameVars {
 		// add custom tags to help maintain consitency with FS. This mostly only exists because some dick
 		// used a hyphen in a variable name, which Go doesn't support for struct value names.
-		jsonTag := RightPad2Len(fmt.Sprintf("json:\"%s\"", gameVar.RawName), " ", longestRawName)
-		i7NameTag := RightPad2Len(fmt.Sprintf("i7Name:\"%s\"", gameVar.RawName), " ", longestRawName)
+		i7NameTag := RightPad2Len(fmt.Sprintf("i7Name:\"%s\"", gameVar.RawName), " ", longestRawName + 9)
 		i7TypeTag := fmt.Sprintf("i7Type:\"%s\"", gameVar.RawType)
-		fullTags := strings.Join([]string{jsonTag, i7NameTag, i7TypeTag}, " ")
+		fullTags := strings.Join([]string{i7NameTag, i7TypeTag}, " ")
 
 		paddedName := RightPad2Len(gameVar.Name, " ", longestName)
 		paddedType := RightPad2Len(gameVar.Type, " ", longestType)
