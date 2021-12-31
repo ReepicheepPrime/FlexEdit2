@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path"
 	"strings"
@@ -13,14 +14,20 @@ func loadRawFile(path string) string {
 	if err != nil { panic(err) }
 
 	decoded := string(rawFile)
-	return strings.ReplaceAll(decoded, "\r\n", "\n") // handle windows-generated files
+	unixed := strings.ReplaceAll(decoded, "\r\n", "\n") // handle windows-generated files
+	return strings.TrimSuffix(unixed, "\n") // remove ending newline
 }
 
 func parseExported(baseDir string) {
 	// FSEventSave
 	rawEventSave := loadRawFile(path.Join(baseDir, exported.EventSaveFile))
-	eventSave, _ := exported.ParseEventSave(rawEventSave)
-	panic(eventSave)
+	eventSave, err := exported.ParseEventSave(rawEventSave)
+	if err != nil {
+		panic(err)
+	}
+	for _, event := range eventSave {
+		fmt.Printf("%+v\n", *event)
+	}
 }
 
 func main() {

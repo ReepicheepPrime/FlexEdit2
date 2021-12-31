@@ -1,9 +1,9 @@
 package exported
 
 import (
-	"fmt"
-	"strconv"
 	"strings"
+	
+	"github.com/reepicheepprime/flexible-survival-editor/helpers"
 )
 
 const EventSaveFile = "FSEventSave.glkdata"
@@ -12,32 +12,10 @@ type GameEvents []*GameEvent
 
 type GameEvent struct {
 	Name          string
-	ResolveState  string
-	ActiveState   string
+	ResolveState  string // ["Resolved", "Unresolved"]
+	ActiveState   string // ["Active", "Inactive"]
 	Resolution    int
 	SituationArea string
-}
-
-func DecodeAscii(s string) (string, error) {
-	if !strings.HasPrefix(s, "S") {
-		return "", fmt.Errorf("input value is not a string: %s", s)
-	}
-
-	s = strings.TrimPrefix(s, "S")
-	s = strings.TrimSuffix(s, ";")
-
-	out := ""
-	chars := strings.Split(s, ",")
-
-	for _, char := range chars {
-		num, err := strconv.Atoi(char)
-		if err != nil {
-			return "", fmt.Errorf("failed to convert to int: %s", char)
-		}
-		out += string(rune(num))
-	}
-
-	return out, nil
 }
 
 func ParseEventSave(raw string) (GameEvents, error) {
@@ -48,31 +26,31 @@ func ParseEventSave(raw string) (GameEvents, error) {
 		rawValues := strings.Split(rawLine, " ")
 
 		// parse Name
-		Name, err := DecodeAscii(rawValues[0])
+		Name, err := helpers.DecodeString(rawValues[0])
 		if err != nil {
 			return nil, err
 		}
 
 		// parse ResolveState
-		ResolveState, err := DecodeAscii(rawValues[1])
+		ResolveState, err := helpers.DecodeString(rawValues[1])
 		if err != nil {
 			return nil, err
 		}
 
 		// parse ActiveState
-		ActiveState, err := DecodeAscii(rawValues[2])
+		ActiveState, err := helpers.DecodeString(rawValues[2])
 		if err != nil {
 			return nil, err
 		}
 
 		// parse Resolution
-		Resolution, err := strconv.Atoi(strings.TrimSuffix(rawValues[3], ";"))
+		Resolution, err := helpers.DecodeNumber(rawValues[3])
 		if err != nil {
 			return nil, err
 		}
 
 		// parse SituationArea
-		SituationArea, err := DecodeAscii(rawValues[2])
+		SituationArea, err := helpers.DecodeString(rawValues[2])
 		if err != nil {
 			return nil, err
 		}
